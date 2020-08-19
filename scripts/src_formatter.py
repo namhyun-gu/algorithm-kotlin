@@ -21,9 +21,15 @@ def replace_classname(line: str) -> str:
         return line
 
 
+def is_comment(line: str) -> bool:
+    return line.startswith("//") or line.startswith("/**") or line.startswith("**/")
+
+
 with open(source) as file:
     for line in file.readlines():
         if has_package(line):
+            continue
+        if is_comment(line):
             continue
         line = replace_classname(line)
         line = line.replace('\n', '')
