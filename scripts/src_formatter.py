@@ -16,12 +16,6 @@ class Type:
         self.className = className
 
 
-types = {
-    'baekjoon': Type(path='src/main/java/baekjoon/', className="Main"),
-    'programmers': Type(path='src/main/java/programmers/', className="Solution")
-}
-
-
 class Formatter:
     @classmethod
     def __load_file__(self, filepath):
@@ -120,41 +114,44 @@ class RerunValidator(Validator):
             raise ValidationError(message='Can only y or n')
 
 
-type_completer = WordCompleter(list(types))
+if __name__ == "__main__":
+    types = {
+        'baekjoon': Type(path='src/main/java/baekjoon/', className="Main"),
+        'programmers': Type(path='src/main/java/programmers/', className="Solution")
+    }
 
-type = prompt('type> ',
-              completer=type_completer,
-              complete_while_typing=True,
-              validator=TypeValidator(),
-              validate_while_typing=True)
+    formatters = {
+        '.java': JavaFormatter(),
+        '.kt': KotlinFormatter()
+    }
 
-path = prompt('path> ',
-              completer=PathCompleter(
-                  get_paths=lambda: [types[type].path],
-                  min_input_len=1
-              ),
-              complete_while_typing=True,
-              validator=PathValidator(),
-              validate_while_typing=True)
+    type_completer = WordCompleter(list(types))
 
+    type = prompt('type> ',
+                  completer=type_completer,
+                  complete_while_typing=True,
+                  validator=TypeValidator(),
+                  validate_while_typing=True)
 
-def run_formatter(type: Type, filepath: str):
-    formatter: Formatter = None
-    if filepath.endswith(".java"):
-        formatter = JavaFormatter()
-    elif filepath.endswith(".kt"):
-        formatter = KotlinFormatter()
+    path = prompt('path> ',
+                  completer=PathCompleter(
+                      get_paths=lambda: [types[type].path],
+                      min_input_len=1
+                  ),
+                  complete_while_typing=True,
+                  validator=PathValidator(),
+                  validate_while_typing=True)
 
-    for line in formatter.format(filepath, type):
-        print(line)
+    rerun = True
+    while rerun:
+        file_path = types[type].path + path
+        file_ext = os.path.splitext(file_path)[1]
+        formatter: Formatter = formatters[file_ext]
 
+        for line in formatter.format(file_path, types[type]):
+            print(line)
 
-rerun = True
-while rerun:
-    run_formatter(types[type], types[type].path + path)
-
-    rerun = prompt('\nRe-run? (y/n) ', validator=RerunValidator(),
-                   validate_while_typing=True)
-
-    if rerun == 'n':
-        rerun = False
+        rerun = prompt('\nRe-run? (y/n) ', validator=RerunValidator(),
+                       validate_while_typing=True)
+        if rerun == 'n':
+            rerun = False
