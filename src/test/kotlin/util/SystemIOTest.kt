@@ -50,4 +50,18 @@ open class SystemIOTest {
         }
         return adjusted
     }
+
+    data class Testcase(val input: String, val action: () -> Unit)
+
+    infix fun Function<Unit>.at(input: String): Testcase {
+        return Testcase(input, this as () -> Unit)
+    }
+
+    infix fun Testcase.be(expected: String) {
+        setInput(input)
+        action()
+
+        val output = output.toString()
+        Assert.assertEquals(adjustFormat(expected, output), output)
+    }
 }
