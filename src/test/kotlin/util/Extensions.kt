@@ -11,6 +11,14 @@ infix fun <T> Array<T>.shouldBe(expect: Array<T>) {
     Assert.assertArrayEquals(expect, this)
 }
 
+infix fun IntArray.shouldBe(expect: Array<Int>) {
+    Assert.assertArrayEquals(expect, this.toTypedArray())
+}
+
+infix fun IntArray.shouldBe(expect: IntArray) {
+    Assert.assertArrayEquals(expect.toTypedArray(), this.toTypedArray())
+}
+
 private inline fun <reified T> String.toArray(map: (String) -> T): Array<T> {
     val tokenizer = StringTokenizer(removeSurrounding("[", "]"), ",")
     val items = mutableListOf<String>()
