@@ -36,12 +36,12 @@ fun String.toArray(): Array<String> {
     return toArray(Transformers.DEFAULT)
 }
 
-fun String.toIntArray(): Array<Int> {
-    return toArray(Transformers.INT)
+fun String.toIntArray(): IntArray {
+    return toArray(Transformers.INT).toIntArray()
 }
 
-fun String.toBooleanArray(): Array<Boolean> {
-    return toArray(Transformers.BOOLEAN)
+fun String.toBooleanArray(): BooleanArray {
+    return toArray(Transformers.BOOLEAN).toBooleanArray()
 }
 
 typealias Transformer<T> = (String) -> T

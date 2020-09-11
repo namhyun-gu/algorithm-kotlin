@@ -11,6 +11,6 @@ class TargetNumberTest {
     fun `Test example input 1`() {
         val numbers = "[1, 1, 1, 1, 1]".toIntArray()
         val target = 3
-        solution.solution(numbers.toIntArray(), target) shouldBe 5
+        solution.solution(numbers, target) shouldBe 5
     }
 }
