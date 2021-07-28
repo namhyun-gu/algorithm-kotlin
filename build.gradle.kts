@@ -1,25 +1,31 @@
 plugins {
-    java
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.5.10"
+    id("com.diffplug.spotless") version "5.14.1"
 }
 
-version = "1.0"
+group = "io.github.namhyungu"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    testImplementation("junit", "junit", "4.12")
-    testImplementation("com.github.stefanbirkner:system-rules:1.19.0")
+tasks.test {
+    useJUnitPlatform()
 }
 
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+dependencies {
+    implementation(kotlin("stdlib"))
+    implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+}
+
+configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat()
     }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+    kotlin {
+        target("src/**/*.kt")
+        ktfmt().kotlinlangStyle()
     }
 }
